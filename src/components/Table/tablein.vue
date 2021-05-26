@@ -44,4 +44,29 @@ export default {
   background-color: rgb(69, 244, 254) !important;
   color: #000 !important;
 }
+.el-table {
+  thead {
+    color: #fff;
+    font-weight: 700;
+    background: #20505c !important;
+    & th {
+      background-color: transparent;
+    }
+    & tr {
+      background-color: transparent;
+    }
+  }
+}
+.el-table,
+.el-table__expanded-cell {
+  background-color: transparent;
+}
+.el-table th,
+.el-table tr {
+  color: #45f4fe;
+  background-color: transparent;
+}
+.el-table tbody tr:hover > td {
+  background-color: transparent !important;
+}
 </style>

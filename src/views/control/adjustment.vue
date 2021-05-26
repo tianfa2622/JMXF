@@ -1,54 +1,56 @@
 <template>
-  <div class="content">
+  <div class="xf_content">
     <div class="content-title">巡防调整提示</div>
-    <div class="content-char">
-      <div class="char">
-        <div class="char-title">网格调整提示数量统计</div>
-        <div class="char-echats">
+    <el-row type="flex" justify="space-around">
+      <el-col :span="7">
+        <div class="row_title">网格调整提示数量统计</div>
+        <div class="row_echarts">
           <gridadjustEchar />
         </div>
-      </div>
-      <div class="char">
-        <div class="char-title">街面警务调整提示数量统计</div>
-        <div class="char-echats">
+      </el-col>
+      <el-col :span="7">
+        <div class="row_title">街面警务调整提示数量统计</div>
+        <div class="row_echarts">
           <gridadjustEchar />
         </div>
-      </div>
-      <div class="char">
-        <div class="char-title">巡逻路线调整提示数量统计</div>
-        <div class="char-echats">
+      </el-col>
+      <el-col :span="7">
+        <div class="row_title">巡逻路线调整提示数量统计</div>
+        <div class="row_echarts">
           <gridadjustEchar />
         </div>
-      </div>
-      <div class="char">
-        <div class="char-title">巡区网格调整提示栏</div>
-        <div class="char-table">
-          <tablein :data="tableData" :table-row-class-name="tableRowClassName" />
+      </el-col>
+    </el-row>
+    <el-row type="flex" justify="space-around" class="content-table">
+      <el-col :span="7">
+        <span class="table_title">巡区网格调整提示栏</span>
+        <div class="row_table">
+          <Tablein :data="tableData" :table-row-class-name="tableRowClassName" />
         </div>
-      </div>
-      <div class="char">
-        <div class="char-title">界面任务站调整提示栏</div>
-        <div class="char-table">
-          <tablein :data="tableData1" />
+      </el-col>
+      <el-col :span="7">
+        <span class="table_title">界面任务站调整提示栏</span>
+        <div class="row_table">
+          <Tablein :data="tableData1" :table-row-class-name="tableRowClassName" />
         </div>
-      </div>
-      <div class="char">
-        <div class="char-title">巡逻路线提示栏</div>
-        <div class="char-table">
-          <tablein :data="tableData2" />
+      </el-col>
+      <el-col :span="7">
+        <span class="table_title">巡逻路线提示栏</span>
+        <div class="row_table">
+          <Tablein :data="tableData2" :table-row-class-name="tableRowClassName" />
         </div>
-      </div>
-    </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
 import gridadjustEchar from './components/gridadjustEchar'
-import tablein from '@/components/Table/tablein'
+import Tablein from '@/components/Table/tablein'
 
 export default {
   components: {
     gridadjustEchar,
-    tablein
+    Tablein
   },
   data() {
     return {
@@ -123,13 +125,23 @@ export default {
       }
     }
   },
-  methods: {}
+  methods: {
+    // 动态添加el-tabel不同列表的class
+    tableRowClassName({ row, rowIndex }) {
+      console.log(row, rowIndex)
+      if ((rowIndex + 1) % 2 === 0) {
+        return 'success-row'
+      } else {
+        return 'error-row'
+      }
+    }
+  }
 }
 </script>
-<style lang="scss">
-.content {
-  width: 100%;
-  height: calc(100% - 100px);
+<style lang="scss" scoped>
+.xf_content {
+  width: 95%;
+  height: calc(100% - 120px);
   margin: 0 auto;
   margin-bottom: 20px;
   padding: 40px;
@@ -137,6 +149,22 @@ export default {
   background-repeat: no-repeat;
   background-size: 100% 100%;
   overflow: auto;
+  /deep/.success-row {
+    background-color: rgb(29, 114, 122) !important;
+    color: #fff !important;
+  }
+  /deep/.success-row:hover > td {
+    background-color: rgb(29, 114, 122) !important;
+    color: #fff !important;
+  }
+  /deep/.error-row {
+    background-color: rgb(69, 244, 254) !important;
+    color: #000 !important;
+  }
+  /deep/.error-row:hover > td {
+    background-color: rgb(69, 244, 254) !important;
+    color: #000 !important;
+  }
   .content-title {
     width: 100%;
     height: 8%;
@@ -144,28 +172,39 @@ export default {
     color: #fff;
     font-weight: 600;
   }
-  .content-char {
+  .row_title {
+    color: #ffffff;
+    font-size: 14px;
+    text-align: center;
+    height: 30px;
+  }
+  .row_echarts {
     width: 100%;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    .char {
-      margin: 20px;
-      width: 30%;
-      height: 50%;
-      .char-title {
-        text-align: center;
-        font-size: 16px;
+    height: calc(100% - 30px);
+  }
+  .content-table {
+    margin-top: 20px;
+    .table_title {
+      display: inline-block;
+      color: #fff;
+      height: 30px;
+      font-size: 15px;
+      font-weight: 500;
+      border-bottom: 1px solid #808080;
+    }
+    .row_table {
+      margin-top: 20px;
+      /deep/ .el-table,
+      .el-table__expanded-cell {
+        background-color: transparent;
+      }
+      // /deep/ .el-table tr {
+      //   background-color: transparent !important;
+      // }
+      /deep/ .el-table__header-wrapper .el-table__header .has-gutter tr th {
+        // background-color: transparent !important;
+        background-color: #20505c !important;
         color: #fff;
-      }
-      .char-table {
-        width: 100%;
-        margin-top: 20px;
-        height: calc(100% - 42px);
-      }
-      .char-echats {
-        width: 100%;
-        height: calc(100% - 22px);
       }
     }
   }

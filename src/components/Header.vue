@@ -4,7 +4,7 @@
     <div class="head-mid">
       <ul>
         <li>
-          <router-link to="/"><div>首页</div></router-link>
+          <router-link to="/home"><div>首页</div></router-link>
         </li>
         <li>
           <div>
@@ -61,13 +61,13 @@
           </div>
         </li>
         <li>
-          <div>系统设置</div>
+          <div><router-link to="/system">系统设置</router-link></div>
         </li>
       </ul>
     </div>
     <div class="head-right">
       <span class="user">下午好！157***6999 </span>
-      <el-button type="text"> 退出登录 </el-button>
+      <el-button type="text" @click="pushPage"> 退出登录 </el-button>
     </div>
   </div>
 </template>
@@ -76,6 +76,11 @@
 export default {
   data() {
     return {}
+  },
+  methods: {
+    pushPage() {
+      this.$router.push('/login')
+    }
   }
 }
 </script>

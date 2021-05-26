@@ -17,17 +17,41 @@
     <div class="cx_content_table">
       <Tablein :data="tableData">
         <template #operation="{data}">
-          <el-link type="primary" @click="Infor(data.name)">详情</el-link>
-          <el-link type="primary" @click="Infor(data.name)">修改</el-link>
-          <el-link type="primary" @click="Infor(data.name)">删除</el-link>
-          <el-link type="primary" @click="Infor(data.name)">撤销申请</el-link>
-          <el-link type="primary" @click="Infor(data.name)">结果反馈</el-link>
+          <el-link type="primary" @click="details(data.name)">详情</el-link>
+          <el-link type="primary" @click="modify(data.name)">修改</el-link>
+          <el-link type="primary" @click="del(data.name)">删除</el-link>
+          <el-link type="primary" @click="revoke(data.name)">撤销申请</el-link>
+          <el-link type="primary" @click="feedback(data.name)">结果反馈</el-link>
         </template>
       </Tablein>
       <div class="Pagin">
         <el-pagination :current-page="currentPage" :page-sizes="[10, 15, 20, 15]" :page-size="10" layout="total, sizes, prev, pager, next, jumper" :total="10" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
       </div>
     </div>
+    <el-dialog :title="title" :visible.sync="dialogShow" center width="40%">
+      <Elsearch v-if="title !== '结果反馈'" :search-settings="dialogSettings" :form-data="dialogData" />
+      <el-form v-else ref="form" :model="dialogDatas" label-width="auto" :rules="{ required: true, message: '请填写', trigger: 'blur' }">
+        <el-form-item label="反馈结果">
+          <el-input v-model="dialogData.desc" :rows="6" resize="none" clearable type="textarea"></el-input>
+        </el-form-item>
+      </el-form>
+      <template v-if="isBottomBtn === true" #footer>
+        <span class="dialog-footer">
+          <el-button @click="confirm">保存</el-button>
+          <el-button @click="cancel">关闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <el-dialog :title="deltitle" class="inner_dialog_class" :visible.sync="delShow" center width="30%">
+      <p v-if="deltitle === '删除'">确认要删除选中内容吗？删除后数据不可恢复哦！！</p>
+      <p v-else>确认要撤销申请吗？</p>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="confirmDel">确认</el-button>
+          <el-button @click="delShow = false">取消</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -45,6 +69,26 @@ export default {
   },
   data() {
     return {
+      title: '', // 弹出框标题
+      dialogShow: false, // 显示弹出框
+      isBottomBtn: false, // 底部按钮显示
+      deltitle: '', // 删除/撤销申请弹出层标题
+      delShow: false, // 显示删除/撤销申请弹出层
+      // 弹出框反馈数据
+      dialogDatas: {
+        desc: ''
+      },
+      // 弹出框数据
+      dialogData: {
+        input: ''
+      },
+      // 订阅弹出层输入框
+      dialogSettings: [
+        { label: '对象名称', placeholder: '请输入', type: 'input', name: 'input' },
+        { label: '布控类型', placeholder: '请选择', type: 'select', name: 'input', options: [{ label: '测试1', value: 0 }] },
+        { label: '布控时间', type: 'data', name: 'input' },
+        { label: '申请地点', placeholder: '请输入', type: 'input', name: 'input' }
+      ],
       // 搜索框
       searchSettings: [
         { placeholder: '请输入对象名称', type: 'input', name: 'input' },
@@ -101,7 +145,11 @@ export default {
   },
   methods: {
     // 添加按钮
-    add() {},
+    add() {
+      this.title = '申请协助'
+      this.dialogShow = true
+      this.isBottomBtn = true
+    },
     // 搜索按钮
     search() {},
     // 重置按钮
@@ -109,8 +157,45 @@ export default {
       Object.assign(this.$data.formData, this.$options.data().formData)
     },
     // 表格按钮
-    Infor(data) {
-      console.log(data)
+    // 详情按钮
+    details() {
+      this.title = '详情'
+      this.dialogShow = true
+      this.isBottomBtn = false
+    },
+    // 修改按钮
+    modify() {
+      this.title = '修改'
+      this.dialogShow = true
+      this.isBottomBtn = true
+    },
+    // 删除按钮
+    del() {
+      this.deltitle = '删除'
+      this.delShow = true
+    },
+    // 撤销按钮
+    revoke() {
+      this.deltitle = '撤销申请'
+      this.delShow = true
+    },
+    // 结果反馈
+    feedback() {
+      this.title = '结果反馈'
+      this.isBottomBtn = true
+      this.dialogShow = true
+    },
+    // 弹出框确认按钮
+    confirm() {
+      this.dialogShow = false
+    },
+    // 弹出框取消按钮
+    cancel() {
+      this.dialogShow = false
+    },
+    // 删除或撤销确认按钮
+    confirmDel() {
+      this.delShow = false
     },
     // 切换当前页展示条数
     handleSizeChange(val) {
@@ -188,6 +273,56 @@ export default {
       }
       .el-pagination__jump {
         color: #fff;
+      }
+    }
+  }
+  /deep/.el-dialog__wrapper {
+    .el-dialog {
+      .el-dialog__header {
+        background-color: #0d2e36 !important;
+        border-bottom: 1px solid #20505c;
+        .el-dialog__title {
+          color: #ffffff !important;
+        }
+      }
+      .el-dialog__body {
+        background-color: #0d2e36 !important;
+        p {
+          color: #fff;
+        }
+        .el-form {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          height: auto;
+          .el-form-item {
+            width: 80% !important;
+            margin-right: 20px;
+            margin-bottom: 10px;
+            .el-form-item__label {
+              color: #fff;
+            }
+            .el-form-item__content {
+              width: auto;
+            }
+          }
+          .btn {
+            .el-button {
+              padding: 12px 30px;
+            }
+          }
+        }
+      }
+      .el-dialog__footer {
+        background-color: #0d2e36 !important;
+        .dialog-footer {
+          .el-button {
+            padding: 12px 40px;
+            background-color: #0e3c42;
+            color: #3fdee7;
+            border-color: #797979;
+          }
+        }
       }
     }
   }

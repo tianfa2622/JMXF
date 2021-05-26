@@ -1,16 +1,20 @@
 <template>
-  <el-form ref="form" :model="form" :disabled="disabled" :label-width="searchLabelWidth == undefined ? 'auto' : searchLabelWidth" :rules="rules">
+  <el-form ref="form" :model="form" :inline="inline" :disabled="disabled" :label-width="searchLabelWidth == undefined ? 'auto' : searchLabelWidth" :rules="rules">
     <el-form-item v-for="(item, index) in searchSettings" :key="index" :label="item.label != '' ? item.label : ''" :prop="item.name">
       <el-input v-if="item.type === 'input'" v-model="form[item.name]" clearable :placeholder="item.placeholder" :read-only="readOnly"></el-input>
       <el-input v-if="item.type === 'number'" v-model.number="form[item.name]" clearable :placeholder="item.placeholder" :min="0" type="number" onkeyup="value=value.replace(/[^\d]/g,'')" :read-only="readOnly"></el-input>
       <el-select v-if="item.type === 'select'" v-model="form[item.name]" clearable :placeholder="item.placeholder" @change="item.selectChanged ? selectChanged(form[item.name], item.options) : ''">
         <el-option v-for="op in item.options" :key="op.value" :label="op.label" :value="op.value"></el-option>
       </el-select>
+      <el-radio-group v-if="item.type === 'radio'" v-model="form[item.name]">
+        <el-radio v-for="op in item.options" :key="op.value" :label="op.value">{{ op.label }}</el-radio>
+      </el-radio-group>
       <el-date-picker v-else-if="item.type === 'datetime'" v-model="form[item.name]" :clearable="disabled" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="选择日期时间"> </el-date-picker>
       <el-cascader v-else-if="item.type === 'cascader'" v-model="form[item.name]" :placeholder="item.placeholder" :clearable="disabled" :props="item.props" :read-only="readOnly" :options="item.options" :show-all-levels="false"> </el-cascader>
       <el-input v-if="item.type === 'textarea'" v-model="form[item.name]" type="textarea" :clearable="disabled" :placeholder="item.placeholder"></el-input>
-      <el-date-picker v-if="item.type === 'data'" v-model="form[item.name]" type="date" :clearable="disabled" placeholder="选择日期"> </el-date-picker>
+      <el-date-picker v-if="item.type === 'data'" v-model="form[item.name]" value-format="yyyy-MM-dd" type="date" :clearable="disabled" placeholder="选择日期"> </el-date-picker>
       <el-date-picker v-if="item.type === 'datas'" v-model="form[item.name]" type="daterange" :clearable="disabled" range-separator="至" start-placeholder="开始日期" :value-format="item.valueFormat ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm:ss'" end-placeholder="结束日期"> </el-date-picker>
+      <span v-if="item.type === 'span'" class="formSpan">{{ form[item.name] }}</span>
     </el-form-item>
     <div v-for="item in searchBtn" :key="item.name" class="btn">
       <el-button v-if="item.type === 'search'" type="primary" @click="search">{{ item.name }}</el-button>
@@ -23,7 +27,7 @@
 <script>
 export default {
   // eslint-disable-next-line vue/require-prop-types
-  props: ['searchSettings', 'searchBtn', 'searchLabelWidth', 'readOnly', 'formData', 'rules', 'disabled'],
+  props: ['searchSettings', 'searchBtn', 'searchLabelWidth', 'readOnly', 'formData', 'rules', 'disabled', 'inline'],
   data: () => ({
     form: {}
   }),
@@ -77,6 +81,10 @@ export default {
       input[type='number'] {
         -moz-appearance: textfield;
       }
+      .formSpan {
+        font-size: 14px;
+        color: #fff;
+      }
       .el-input {
         width: 100%;
         input {
@@ -129,6 +137,7 @@ export default {
   .btn {
     margin-right: 0.2rem;
     button {
+      width: 100px;
       background-color: rgba(5, 60, 67, 1);
       border-color: rgba(121, 121, 121, 1);
       color: #00f3ff;

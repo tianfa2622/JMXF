@@ -23,89 +23,19 @@
         </div>
         <div class="main-right">
           <div class="right-button">
-            <el-button>预案管理</el-button>
+            <el-button @click="patrolPlan">巡逻预案</el-button>
           </div>
           <div class="right-main">
-            <div class="main-six">
+            <div v-for="o in 6" :key="o" class="main-six">
               <p>万家丽地铁站-1号摄像头 <span>● 正常</span></p>
               <img src="../../assets/six.jpg" />
-              <el-button>抓拍</el-button><el-button>抓录</el-button>
-              <el-button>历史视频录像</el-button>
-              <!-- <span
-                style="
-                  color: #fff;
-                  font-size: 14px;
-                  float: right;
-                  padding-top: 10px;
-                "
-                >万家丽地铁站</span
-              > -->
-            </div>
-            <div class="main-six">
-              <p>万家丽地铁站-1号摄像头 <span>● 正常</span></p>
-              <img src="../../assets/six.jpg" />
-              <el-button>抓拍</el-button><el-button>抓录</el-button>
-              <el-button>历史视频录像</el-button>
-              <!-- <span
-                style="
-                  color: #fff;
-                  font-size: 14px;
-                  float: right;
-                  padding-top: 10px;
-                "
-                >万家丽地铁站</span
-              > -->
-            </div>
-            <div class="main-six">
-              <p>万家丽地铁站-1号摄像头 <span>● 正常</span></p>
-              <img src="../../assets/six.jpg" />
-              <el-button>抓拍</el-button><el-button>抓录</el-button>
-              <el-button>历史视频录像</el-button>
-              <!-- <span
-                style="
-                  color: #fff;
-                  font-size: 14px;
-                  float: right;
-                  padding-top: 10px;
-                "
-                >万家丽地铁站</span
-              > -->
-            </div>
-            <div class="main-six">
-              <p>万家丽地铁站-1号摄像头 <span>● 正常</span></p>
-              <img src="../../assets/six.jpg" />
-              <el-button>抓拍</el-button><el-button>抓录</el-button>
-              <el-button>历史视频录像</el-button>
-              <!-- <span
-                style="
-                  color: #fff;
-                  font-size: 14px;
-                  float: right;
-                  padding-top: 10px;
-                "
-                >万家丽地铁站</span
-              > -->
-            </div>
-            <div class="main-six">
-              <p>万家丽地铁站-1号摄像头 <span>● 正常</span></p>
-              <img src="../../assets/six.jpg" />
-              <el-button>抓拍</el-button><el-button>抓录</el-button>
-              <el-button>历史视频录像</el-button>
-              <!-- <span
-                style="
-                  color: #fff;
-                  font-size: 14px;
-                  float: right;
-                  padding-top: 10px;
-                "
-                >万家丽地铁站</span
-              > -->
-            </div>
-            <div class="main-six">
-              <p>万家丽地铁站-1号摄像头 <span>● 正常</span></p>
-              <img src="../../assets/six.jpg" />
-              <el-button>抓拍</el-button><el-button>抓录</el-button>
-              <el-button>历史视频录像</el-button>
+              <span class="spanBtn" @click="snap">抓拍</span>
+              <span class="spanIcon" @click="snapList">></span>
+              <span class="spanBtn" style="margin-left:10px;" @click="catchVideo">
+                {{ catchTitle }}
+              </span>
+              <span class="spanIcon" @click="catchList">></span>
+              <span class="spanBtn" style="border-radius:4px; margin-left:10px;" @click="historicalVideo">历史视频录像</span>
               <!-- <span
                 style="
                   color: #fff;
@@ -133,24 +63,274 @@
         <pictureMap />
       </div>
     </div>
+    <el-dialog :title="title" :visible.sync="dialogShow" center width="50%">
+      <div class="table">
+        <el-button v-if="title === '巡逻预案'" @click="add">添加</el-button>
+        <tablein :data="tableDatatwo" class="MyElTable">
+          <template #operation="{data}">
+            <el-link v-if="title === '巡逻预案'" type="primary" @click="modify(data.name)">修改</el-link>
+            <el-link v-if="title === '巡逻预案'" type="primary" @click="del(data.name)">删除</el-link>
+            <el-link v-if="title === '历史视频录像'" type="primary" @click="Replay(data.name)">回放</el-link>
+            <el-link v-if="title === '抓录视频'" type="primary" @click="CaptureVideoReplay(data.name)">回放</el-link>
+            <el-link v-if="title === '抓拍图片'" type="primary" @click="viewImage(data.name)">查看</el-link>
+          </template>
+        </tablein>
+      </div>
+      <div class="Pagin">
+        <el-pagination :current-page="currentPage4" :page-sizes="[10]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="10" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+      </div>
+      <el-dialog width="35%" :title="innerTitle" :visible.sync="innerVisible" append-to-body center>
+        <el-form ref="form" :model="form" label-width="auto">
+          <el-form-item label="预案名称">
+            <el-input v-model="form.name" placeholder="请输入"></el-input>
+          </el-form-item>
+          <el-form-item label="播放时长">
+            <el-input v-model="form.name" placeholder="请输入"></el-input>
+          </el-form-item>
+          <el-form-item label="选择区域">
+            <el-select v-model="form.name" placeholder="请选择区域">
+              <el-option label="芙蓉区" value="shanghai"></el-option>
+            </el-select>
+            <el-select v-model="form.region" style="margin-left:10px" placeholder="请选择地铁站">
+              <el-option label="万家丽地铁站" value="shanghai"></el-option>
+              <el-option label="景泰广场地铁站" value="beijing"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="选择摄像头">
+            <div class="multi-select">
+              <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+                <el-checkbox v-for="city in cities" :key="city" :label="city">{{ city }}</el-checkbox>
+              </el-checkbox-group>
+              <div class="border" />
+              <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">全选/全不选</el-checkbox>
+            </div>
+          </el-form-item>
+          <el-form-item label="是否启用预案">
+            <el-radio-group v-model="form.name">
+              <el-radio label="是"></el-radio>
+              <el-radio label="否"></el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="innerConfirm">保存</el-button>
+            <el-button @click="innerCancel">关闭</el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <el-dialog title="删除" :visible.sync="delShow" center width="30%" append-to-body>
+        <p>确认要删除选中内容吗？删除后数据不可恢复哦！！</p>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="confirmDel">确认</el-button>
+            <el-button @click="delShow = false">取消</el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="confirm">保存</el-button>
+          <el-button @click="cancel">关闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 <script>
+import tablein from '@/components/Table/tablein'
 import pictureMap from './components/pictureMap'
 const cityOptions = ['万家丽地铁站-1号摄像头', '万家丽地铁站-1号摄像头', '万家丽地铁站-1号摄像头', '万家丽地铁站-1号摄像头', '万家丽地铁站-1号摄像头']
 export default {
   components: {
-    pictureMap
+    pictureMap,
+    tablein
   },
   data() {
     return {
+      title: '', // 弹出框标题
+      delShow: false, // 删除或上报弹出层
+      dialogShow: false, // 显示弹出框
+      dialogData: {}, // 弹出框数据
+      innerTitle: '',
+      innerVisible: false,
+      catchTitle: '抓录',
       checkAll: false,
       checkedCities: ['上海', '北京'],
       cities: cityOptions,
-      isIndeterminate: true
+      isIndeterminate: true,
+      form: {
+        name: null
+      },
+      tableDatatwo: {
+        tableHeader: [],
+        tableList: Array(5).fill({ input: '111' })
+      },
+      tableHeader1: [
+        {
+          label: '序号',
+          prop: 'input',
+          width: 50
+        },
+        {
+          label: '预案名称',
+          prop: 'input'
+        },
+        {
+          label: '添加时间',
+          prop: 'input'
+        },
+        {
+          label: '播放时长(分钟)',
+          prop: 'input'
+        },
+        {
+          label: '设备数量',
+          prop: 'input'
+        },
+        {
+          label: '操作',
+          type: 'slot',
+          width: 150,
+          slotName: 'operation'
+        }
+      ],
+      tableHeader2: [
+        {
+          label: '序号',
+          prop: 'input',
+          width: 50
+        },
+        {
+          label: '视频名称',
+          prop: 'input'
+        },
+        {
+          label: '上传时间',
+          prop: 'input'
+        },
+        {
+          label: '视频时间段',
+          prop: 'input'
+        },
+        {
+          label: '视频时长(分钟)',
+          prop: 'input'
+        },
+        {
+          label: '所属设备',
+          prop: 'input'
+        },
+        {
+          label: '操作',
+          type: 'slot',
+          width: 150,
+          slotName: 'operation'
+        }
+      ],
+      tableHeader3: [
+        {
+          label: '序号',
+          prop: 'input',
+          width: 50
+        },
+        {
+          label: '图片名称',
+          prop: 'input'
+        },
+        {
+          label: '拍摄时间',
+          prop: 'input'
+        },
+        // {
+        //   label: '视频时长(分钟)',
+        //   prop: 'input'
+        // },
+        {
+          label: '所属设备',
+          prop: 'input'
+        },
+        {
+          label: '操作',
+          type: 'slot',
+          width: 150,
+          slotName: 'operation'
+        }
+      ],
+      tableHeader4: [
+        {
+          label: '序号',
+          prop: 'input',
+          width: 50
+        },
+        {
+          label: '视频名称',
+          prop: 'input'
+        },
+        {
+          label: '拍摄时间',
+          prop: 'input'
+        },
+        {
+          label: '视频时间段',
+          prop: 'input'
+        },
+        {
+          label: '视频时长(分钟)',
+          prop: 'input'
+        },
+        {
+          label: '所属设备',
+          prop: 'input'
+        },
+        {
+          label: '操作',
+          type: 'slot',
+          width: 150,
+          slotName: 'operation'
+        }
+      ]
     }
   },
   methods: {
+    // 巡逻预案按钮
+    patrolPlan() {
+      this.title = '巡逻预案'
+      this.dialogShow = true
+      this.tableDatatwo.tableHeader = this.tableHeader1
+    },
+    // 历史视频录像按钮
+    historicalVideo() {
+      this.title = '历史视频录像'
+      this.dialogShow = true
+      this.tableDatatwo.tableHeader = this.tableHeader2
+    },
+    // 抓拍图片按钮
+    snap() {},
+    // 抓拍图片列表按钮
+    snapList() {
+      this.title = '抓拍图片'
+      this.dialogShow = true
+      this.tableDatatwo.tableHeader = this.tableHeader3
+    },
+    // 弹出层抓拍图片查看按钮
+    viewImage() {},
+    // 抓录视频按钮
+    catchVideo() {
+      if (this.catchTitle === '抓录') {
+        this.catchTitle = '停止'
+      } else {
+        this.catchTitle = '抓录'
+      }
+    },
+    // 抓录视频按钮列表按钮
+    catchList() {
+      this.title = '抓录视频'
+      this.dialogShow = true
+      this.tableDatatwo.tableHeader = this.tableHeader4
+    },
+    // 弹出层抓录视频回放按钮
+    CaptureVideoReplay() {},
     handleCheckAllChange(val) {
       this.checkedCities = val ? cityOptions : []
       this.isIndeterminate = false
@@ -268,6 +448,46 @@ export default {
             box-sizing: border-box;
             border: 1px solid rgba(121, 121, 121, 1);
             border-radius: 21px;
+            // .iconBtn {
+            //   padding-bottom: 1px;
+            //   margin-left: 0 !important;
+            //   width: 22px;
+            //   position: relative;
+            //   // padding: 0;
+            //   padding-right: 0;
+            //   padding-right: 0;
+            //   span {
+            //     position: absolute;
+            //     left: 8px;
+            //     top: 9px;
+            //   }
+            // }
+            .spanBtn {
+              display: inline-block;
+              color: #00f3ff;
+              font-size: 14px;
+              background-color: #0e3c42;
+              // height: 35px;
+              cursor: pointer;
+              border: 1px solid #797979;
+              // border-radius: 4px;
+              border-top-left-radius: 5px;
+              border-bottom-left-radius: 5px;
+              padding: 8px 20px;
+            }
+            .spanIcon {
+              display: inline-block;
+              font-size: 14px;
+              color: #00f3ff;
+              background-color: #0e3c42;
+              cursor: pointer;
+              border: 1px solid #797979;
+              border-top-right-radius: 5px;
+              border-bottom-right-radius: 5px;
+              // border-radius: 4px;
+              border-left: none;
+              padding: 8px 10px;
+            }
             button {
               height: 35px;
               background-color: rgba(5, 60, 67, 1);
@@ -330,6 +550,117 @@ export default {
       width: 100%;
       height: 500px;
       padding: 10px;
+    }
+  }
+  .el-dialog__wrapper {
+    .el-dialog {
+      .el-dialog__header {
+        background-color: #0d2e36 !important;
+        border-bottom: 1px solid #20505c;
+        .el-dialog__title {
+          color: #ffffff !important;
+        }
+      }
+      .el-dialog__body {
+        background-color: #0d2e36 !important;
+        padding-bottom: 10px;
+        .el-button {
+          width: 100px;
+          background-color: rgba(5, 60, 67, 1);
+          border-color: rgba(121, 121, 121, 1);
+          color: #00f3ff;
+        }
+        .MyElTable {
+          margin-top: 10px;
+          .el-link {
+            margin-left: 10px;
+          }
+        }
+        .Pagin {
+          width: 100%;
+          height: 50px;
+          text-align: center;
+          margin-top: 10px;
+          .el-pagination__total {
+            color: #fff;
+          }
+          .el-pagination__jump {
+            color: #fff;
+          }
+        }
+      }
+      .el-dialog__footer {
+        background-color: #0d2e36 !important;
+        .dialog-footer {
+          .el-button {
+            padding: 12px 40px;
+            background-color: #0e3c42;
+            color: #3fdee7;
+            border-color: #797979;
+          }
+        }
+      }
+    }
+  }
+}
+.el-dialog__wrapper {
+  .el-dialog {
+    .el-dialog__header {
+      background-color: #0d2e36 !important;
+      border-bottom: 1px solid #20505c;
+      .el-dialog__title {
+        color: #ffffff !important;
+      }
+    }
+    .el-dialog__body {
+      background-color: #0d2e36 !important;
+      padding-bottom: 10px;
+      p {
+        color: #fff;
+      }
+      .el-form {
+        height: auto;
+        .el-form-item {
+          width: 80% !important;
+          margin-right: 0;
+          margin-bottom: 10px;
+          .el-form-item__label {
+            color: #fff;
+          }
+          .el-form-item__content {
+            width: auto;
+            input {
+              background-color: #0d2e36;
+            }
+            .el-radio__label {
+              color: #3fdee7;
+            }
+            .multi-select {
+              border: 1px solid #cccccc;
+              padding: 10px 20px;
+              .el-checkbox__label {
+                color: #3fdee7;
+              }
+              .border {
+                width: 100%;
+                height: 2px;
+                border: 1px solid #ccc;
+              }
+            }
+          }
+        }
+      }
+    }
+    .el-dialog__footer {
+      background-color: #0d2e36 !important;
+      .dialog-footer {
+        .el-button {
+          padding: 12px 40px;
+          background-color: #0e3c42;
+          color: #3fdee7;
+          border-color: #797979;
+        }
+      }
     }
   }
 }

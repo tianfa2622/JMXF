@@ -17,16 +17,35 @@
     <div class="cx_content_table">
       <Tablein :data="tableData">
         <template #operation="{data}">
-          <el-link type="primary" @click="Infor(data.name)">详情</el-link>
-          <el-link type="primary" @click="Infor(data.name)">修改</el-link>
-          <el-link type="primary" @click="Infor(data.name)">删除</el-link>
-          <el-link type="primary" @click="Infor(data.name)">状态上报</el-link>
+          <el-link type="primary" @click="details(data.name)">详情</el-link>
+          <el-link type="primary" @click="modify(data.name)">修改</el-link>
+          <el-link type="primary" @click="del(data.name)">删除</el-link>
+          <el-link type="primary" @click="report(data.name)">状态上报</el-link>
         </template>
       </Tablein>
       <div class="Pagin">
         <el-pagination :current-page="currentPage" :page-sizes="[10, 15, 20, 15]" :page-size="10" layout="total, sizes, prev, pager, next, jumper" :total="10" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
       </div>
     </div>
+    <el-dialog :title="title" :visible.sync="dialogShow" center width="50%">
+      <Elsearch :search-settings="dialogSettings" :form-data="dialogData" />
+      <template v-if="isBottomBtn === true" #footer>
+        <span class="dialog-footer">
+          <el-button @click="confirm">保存</el-button>
+          <el-button @click="cancel">关闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <el-dialog :title="deltitle" :visible.sync="delShow" center width="30%">
+      <p v-if="deltitle === '删除'">确认要删除选中内容吗？删除后数据不可恢复哦！！</p>
+      <p v-else>确认要上报该条状态吗？</p>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="confirmDel">确认</el-button>
+          <el-button @click="delShow = false">取消</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -44,12 +63,47 @@ export default {
   },
   data() {
     return {
+      title: '', // 弹出框标题
+      deltitle: '', // 删除或上报弹出层标题
+      delShow: false, // 删除或上报弹出层
+      dialogShow: false, // 显示弹出框
+      dialogData: {}, // 弹出框数据
+      isBottomBtn: false, // 底部按钮显示
       // 搜索框
       searchSettings: [
         { placeholder: '请输入姓名', type: 'input', name: 'input' },
         { placeholder: '请输入编号', type: 'input', name: 'input' },
         { placeholder: '请选择人员类别', type: 'select', name: 'input', options: [] },
         { placeholder: '请输入行政区划代码', type: 'input', name: 'input' }
+      ],
+      // 弹出框
+      dialogSettings: [
+        { label: '姓名', placeholder: '请输入', type: 'input', name: 'input' },
+        { label: '公民身份证号码', placeholder: '请输入', type: 'input', name: 'input' },
+        { label: '行政区划代码', placeholder: '请输入', type: 'input', name: 'input' },
+        { label: '年龄', placeholder: '请输入', type: 'input', name: 'input' },
+        { label: '人员类别', placeholder: '请选择', type: 'select', name: 'input', options: [{ label: '测试1', value: 0 }] },
+        { label: '民族', placeholder: '请输入', type: 'input', name: 'input' },
+        { label: '编号', placeholder: '请输入', type: 'input', name: 'input' },
+        { label: '籍贯省市县', placeholder: '请输入', type: 'input', name: 'input' },
+        { label: '联系电话', placeholder: '请输入', type: 'input', name: 'input' },
+        {
+          label: '性别',
+          placeholder: '请输入',
+          type: 'select',
+          name: 'input',
+          options: [
+            { label: '男', value: 1 },
+            { label: '女', value: 0 }
+          ]
+        },
+        { label: '所在位置', placeholder: '请输入', type: 'input', name: 'input' },
+        { label: '学历', placeholder: '请输入', type: 'input', name: 'input' },
+        { label: '工作单位', placeholder: '请输入', type: 'input', name: 'input' },
+        { label: '婚姻状况', placeholder: '请输入', type: 'input', name: 'input' },
+        { label: '地球经度', placeholder: '请输入', type: 'input', name: 'input' },
+        { label: '政治面貌', placeholder: '请输入', type: 'input', name: 'input' },
+        { label: '地球纬度', placeholder: '请输入', type: 'input', name: 'input' }
       ],
       // 搜索组件按钮属性
       searchBtn: [
@@ -114,7 +168,11 @@ export default {
   },
   methods: {
     // 添加按钮
-    add() {},
+    add() {
+      this.title = '添加'
+      this.isBottomBtn = true
+      this.dialogShow = true
+    },
     // 搜索按钮
     search() {},
     // 重置按钮
@@ -122,8 +180,39 @@ export default {
       Object.assign(this.$data.formData, this.$options.data().formData)
     },
     // 表格按钮
-    Infor(data) {
-      console.log(data)
+    // 上报按钮
+    report() {
+      this.deltitle = '状态上报'
+      this.delShow = true
+    },
+    // 详情按钮
+    details() {
+      this.title = '详情'
+      this.dialogShow = true
+      this.isBottomBtn = false
+    },
+    // 修改按钮
+    modify() {
+      this.title = '修改'
+      this.dialogShow = true
+      this.isBottomBtn = true
+    },
+    // 删除按钮
+    del() {
+      this.deltitle = '删除'
+      this.delShow = true
+    },
+    // 删除或上报确认按钮
+    confirmDel() {
+      this.delShow = false
+    },
+    // 弹出框确认按钮
+    confirm() {
+      this.dialogShow = false
+    },
+    // 弹出框取消按钮
+    cencel() {
+      this.dialogShow = false
     },
     // 切换当前页展示条数
     handleSizeChange(val) {
@@ -201,6 +290,52 @@ export default {
       }
       .el-pagination__jump {
         color: #fff;
+      }
+    }
+  }
+  /deep/.el-dialog__wrapper {
+    .el-dialog {
+      .el-dialog__header {
+        background-color: #0d2e36 !important;
+        border-bottom: 1px solid #20505c;
+        .el-dialog__title {
+          color: #ffffff !important;
+        }
+      }
+      .el-dialog__body {
+        background-color: #0d2e36 !important;
+        padding-bottom: 10px;
+        p {
+          color: #fff;
+        }
+        .el-form {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          height: auto;
+          .el-form-item {
+            width: 45% !important;
+            margin-right: 0;
+            margin-bottom: 10px;
+            .el-form-item__label {
+              color: #fff;
+            }
+            .el-form-item__content {
+              width: auto;
+            }
+          }
+        }
+      }
+      .el-dialog__footer {
+        background-color: #0d2e36 !important;
+        .dialog-footer {
+          .el-button {
+            padding: 12px 40px;
+            background-color: #0e3c42;
+            color: #3fdee7;
+            border-color: #797979;
+          }
+        }
       }
     }
   }

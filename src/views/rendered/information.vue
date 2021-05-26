@@ -4,74 +4,13 @@
     <div class="content-card">
       <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
         <el-tab-pane label="巡防信息查询" name="first">
-          <div class="footage-title">巡防信息查询</div>
-          <div class="content-tab">
-            <div class="inputs">
-              <el-input v-model="input" placeholder="请输入警情编号" />
-              <el-input v-model="input" placeholder="请输入警情名称" />
-              <el-input v-model="input" placeholder="请选择警情类别" />
-            </div>
-            <div class="buttons">
-              <el-button>搜索</el-button>
-              <el-button>重置</el-button>
-            </div>
-          </div>
-          <div class="table">
-            <tablein :data="tableData">
-              <!-- <template #operation="{ data }">
-                <el-link type="primary" @click="Infor(data.name)">查看</el-link>
-              </template> -->
-            </tablein>
-          </div>
-          <div class="Pagin">
-            <el-pagination :current-page="currentPage4" :page-sizes="[10]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="10" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-          </div>
+          <scouts />
         </el-tab-pane>
         <el-tab-pane label="人员信息查询" name="second">
-          <div class="footage-title">人员信息查询</div>
-          <div class="content-tab">
-            <div class="inputs">
-              <el-input v-model="input" placeholder="请输入人员姓名" />
-              <el-input v-model="input" placeholder="请输入身份证号" />
-            </div>
-            <div class="buttons">
-              <el-button>搜索</el-button>
-              <el-button>重置</el-button>
-            </div>
-          </div>
-          <div class="table">
-            <tablein :data="tableData">
-              <!-- <template #operation="{ data }">
-                <el-link type="primary" @click="Infor(data.name)">查看</el-link>
-              </template> -->
-            </tablein>
-          </div>
-          <div class="Pagin">
-            <el-pagination :current-page="currentPage4" :page-sizes="[10]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="10" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-          </div>
+          <personnel />
         </el-tab-pane>
         <el-tab-pane label="车辆信息查询" name="fourth">
-          <div class="footage-title">车辆信息查询</div>
-          <div class="content-tab">
-            <div class="inputs">
-              <el-input v-model="input" placeholder="请输入车牌号" />
-              <el-input v-model="input" placeholder="请输入驾驶证编号" />
-            </div>
-            <div class="buttons">
-              <el-button>搜索</el-button>
-              <el-button>重置</el-button>
-            </div>
-          </div>
-          <div class="table">
-            <tablein :data="tableData">
-              <!-- <template #operation="{ data }">
-                <el-link type="primary" @click="Infor(data.name)">查看</el-link>
-              </template> -->
-            </tablein>
-          </div>
-          <div class="Pagin">
-            <el-pagination :current-page="currentPage4" :page-sizes="[10]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="10" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
-          </div>
+          <vehicle />
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -79,120 +18,18 @@
 </template>
 
 <script>
-import tablein from '@/components/Table/tablein'
+import scouts from './informationPage/scouts'
+import personnel from './informationPage/personnel'
+import vehicle from './informationPage/vehicle'
 export default {
   components: {
-    tablein
+    scouts,
+    personnel,
+    vehicle
   },
   data() {
     return {
-      activeName: 'first',
-      tableData: {
-        tableHeader: [
-          {
-            label: '序号',
-            prop: 'cid',
-            width: 50
-          },
-          {
-            label: '警情编号',
-            prop: 'number',
-            width: 80
-          },
-          {
-            label: '警情名称',
-            prop: 'name',
-            width: 80
-          },
-          {
-            label: '案事件发生开始时间',
-            prop: 'starttime',
-            width: 80
-          },
-          {
-            label: '巡防警情类别',
-            prop: 'category',
-            width: 80
-          },
-          {
-            label: '涉案地址',
-            prop: 'address',
-            width: 80
-          },
-          {
-            label: '报警人',
-            prop: 'people',
-            width: 80
-          },
-          {
-            label: '处理人',
-            prop: 'Handler',
-            width: 80
-          },
-          {
-            label: '数据来源（行政区划代码）',
-            prop: 'sources',
-            width: 80
-          }
-        ],
-        tableList: [
-          {
-            cid: '1',
-            number: 'JQ2020102201',
-            name: '电动车碰撞',
-            starttime: '20201028 10:37',
-            category: '车辆',
-            address: '万家丽中路',
-            people: '杨丽',
-            Handler: '张三',
-            sources: '43100001212'
-          },
-          {
-            cid: '1',
-            number: 'JQ2020102201',
-            name: '电动车碰撞',
-            starttime: '20201028 10:37',
-            category: '车辆',
-            address: '万家丽中路',
-            people: '杨丽',
-            Handler: '张三',
-            sources: '43100001212'
-          },
-          {
-            cid: '1',
-            number: 'JQ2020102201',
-            name: '电动车碰撞',
-            starttime: '20201028 10:37',
-            category: '车辆',
-            address: '万家丽中路',
-            people: '杨丽',
-            Handler: '张三',
-            sources: '43100001212'
-          },
-          {
-            cid: '1',
-            number: 'JQ2020102201',
-            name: '电动车碰撞',
-            starttime: '20201028 10:37',
-            category: '车辆',
-            address: '万家丽中路',
-            people: '杨丽',
-            Handler: '张三',
-            sources: '43100001212'
-          },
-          {
-            cid: '1',
-            number: 'JQ2020102201',
-            name: '电动车碰撞',
-            starttime: '20201028 10:37',
-            category: '车辆',
-            address: '万家丽中路',
-            people: '杨丽',
-            Handler: '张三',
-            sources: '43100001212'
-          }
-        ]
-      }
+      activeName: 'first'
     }
   },
   methods: {
@@ -231,24 +68,7 @@ export default {
     .content-tab {
       width: 100%;
       height: 50px;
-      display: flex;
-      justify-content: space-between;
       margin-top: 30px;
-      .el-input {
-        width: 170px;
-        margin-right: 10px;
-        input {
-          background-color: rgba(5, 60, 67, 1);
-          height: 30px;
-          color: #00f3ff;
-        }
-      }
-      .el-button {
-        background-color: rgba(5, 60, 67, 1);
-        border-color: rgba(121, 121, 121, 1);
-        color: #00f3ff;
-        width: 100px;
-      }
     }
     .el-tabs--card > .el-tabs__header {
       border: none;

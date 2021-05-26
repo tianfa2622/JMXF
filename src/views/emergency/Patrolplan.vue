@@ -17,16 +17,68 @@
     <div class="cx_content_table">
       <Tablein :data="tableData">
         <template #operation="{data}">
-          <el-link type="primary" @click="Infor(data.name)">详情</el-link>
-          <el-link type="primary" @click="Infor(data.name)">修改</el-link>
-          <el-link type="primary" @click="Infor(data.name)">删除</el-link>
-          <el-link type="primary" @click="Infor(data.name)">战果上报</el-link>
+          <el-link type="primary" @click="details(data.name)">详情</el-link>
+          <el-link type="primary" @click="modify(data.name)">修改</el-link>
+          <el-link type="primary" @click="del(data.name)">删除</el-link>
+          <el-link type="primary" @click="report(data.name)">预案上报</el-link>
         </template>
       </Tablein>
       <div class="Pagin">
         <el-pagination :current-page="currentPage" :page-sizes="[10, 15, 20, 15]" :page-size="10" layout="total, sizes, prev, pager, next, jumper" :total="10" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
       </div>
     </div>
+    <el-dialog :title="title" width="35%" :visible.sync="dialogFormVisible">
+      <el-form :model="dialogForm" label-width="auto" :disabled="disabled" :rules="rules">
+        <el-form-item label="预案名称" prop="name">
+          <el-input v-model="dialogForm.name" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="关键词" prop="name">
+          <el-input v-model="dialogForm.name" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="简要情况" prop="name">
+          <el-input v-model="dialogForm.name" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="详细情况" prop="name">
+          <el-input v-model="dialogForm.name" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="行政区划代码" prop="name">
+          <el-input v-model="dialogForm.name" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="上传民警姓名" prop="name">
+          <el-input v-model="dialogForm.name" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="上传民警编号" prop="name">
+          <el-input v-model="dialogForm.name" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="电子文件URL" prop="name">
+          <el-input v-model="dialogForm.name" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="">
+          <el-row type="flex" justify="space-around">
+            <el-col v-if="title !== '详情'" :span="8">
+              <el-button>上传预案</el-button>
+            </el-col>
+            <el-col :span="8">
+              <el-button>下载预案</el-button>
+            </el-col>
+          </el-row>
+        </el-form-item>
+      </el-form>
+      <div v-if="title !== '详情'" slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="confirm">保 存</el-button>
+        <el-button @click="cancel">关 闭</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog :title="deltitle" :visible.sync="delShow" center width="30%">
+      <p v-if="deltitle === '删除'">确认要删除选中内容吗？删除后数据不可恢复哦！！</p>
+      <p v-else>确认要上报该巡防预案吗？</p>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="confirmDel">确认</el-button>
+          <el-button @click="delShow = false">取消</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -44,12 +96,19 @@ export default {
   },
   data() {
     return {
+      title: '', // 弹出层标题
+      deltitle: '',
+      delShow: false,
+      dialogFormVisible: false, // 是否显示弹出层
+      disabled: false, // 弹出层是否只读
+      dialogForm: {}, // 弹出层数据
+      rules: {}, // 弹出层规则
       // 搜索框
       searchSettings: [
         { placeholder: '请输入预案名称', type: 'input', name: 'input' },
         { placeholder: '请输入上传民警姓名', type: 'input', name: 'input' },
         { placeholder: '请输入上传民警编号', type: 'input', name: 'input' },
-        { placeholder: '请输入行政区划代码', type: 'select', name: 'input', options: [] }
+        { placeholder: '请输入行政区划代码', type: 'input', name: 'input', options: [] }
       ],
       // 搜索组件按钮属性
       searchBtn: [
@@ -114,16 +173,47 @@ export default {
   },
   methods: {
     // 添加按钮
-    add() {},
+    add() {
+      this.title = '新增'
+      this.dialogFormVisible = true
+    },
     // 搜索按钮
     search() {},
     // 重置按钮
     reset() {
       Object.assign(this.$data.formData, this.$options.data().formData)
     },
-    // 表格按钮
-    Infor(data) {
-      console.log(data)
+    // 详情按钮
+    details() {
+      this.title = '详情'
+      this.dialogFormVisible = true
+    },
+    // 修改按钮
+    modify() {
+      this.title = '修改'
+      this.dialogFormVisible = true
+    },
+    // 弹出层确定按钮
+    confirm() {
+      this.dialogFormVisible = false
+    },
+    // 弹出层取消按钮
+    cancel() {
+      this.dialogFormVisible = false
+    },
+    // 上报按钮
+    report() {
+      this.deltitle = '上报'
+      this.delShow = true
+    },
+    // 删除
+    del() {
+      this.deltitle = '删除'
+      this.delShow = true
+    },
+    // 删除或上报确认按钮
+    confirmDel() {
+      this.delShow = false
     },
     // 切换当前页展示条数
     handleSizeChange(val) {
@@ -201,6 +291,63 @@ export default {
       }
       .el-pagination__jump {
         color: #fff;
+      }
+    }
+  }
+  /deep/.el-dialog__wrapper {
+    .el-dialog {
+      .el-dialog__header {
+        background-color: #0d2e36 !important;
+        border-bottom: 1px solid #20505c;
+        .el-dialog__title {
+          color: #ffffff !important;
+        }
+      }
+      .el-dialog__body {
+        background-color: #0d2e36 !important;
+        p {
+          color: #fff;
+        }
+        .el-form {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          height: auto;
+          .el-form-item {
+            width: 80% !important;
+            margin-right: 20px;
+            margin-bottom: 10px;
+            .el-form-item__label {
+              color: #fff;
+            }
+            .el-form-item__content {
+              width: auto;
+              .el-button {
+                padding: 12px 40px;
+                background-color: #0e3c42;
+                color: #3fdee7;
+                border-color: #797979;
+              }
+            }
+          }
+          .btn {
+            .el-button {
+              padding: 12px 30px;
+            }
+          }
+        }
+      }
+      .el-dialog__footer {
+        background-color: #0d2e36 !important;
+        .dialog-footer {
+          text-align: center;
+          .el-button {
+            padding: 12px 40px;
+            background-color: #0e3c42;
+            color: #3fdee7;
+            border-color: #797979;
+          }
+        }
       }
     }
   }

@@ -1,4 +1,3 @@
-
 // configureWebpack: {
 //   resolve: {
 //     extensions:['.js', '.vue', '.json'],
@@ -22,8 +21,9 @@ module.exports = {
     open: true, // 是否自动打开浏览器
     https: false, // 是否开启https
     hotOnly: false,
-    proxy: { // 配置跨域
-      '/api': {
+    proxy: {
+      // 配置跨域
+      '/java': {
         // target: 'http://192.168.1.22:8084/',
         target: 'http://192.168.1.25:8084/',
         // target: 'http://pm2.winvers.com/zhdxhd',
@@ -31,11 +31,23 @@ module.exports = {
         secure: false,
         changOrigin: true, // 是否允许跨越
         pathRewrite: {
-          '^/api': ''
+          '^/java': ''
+        }
+      },
+      '/apis': {
+        // target: 'http://192.168.1.22:8084/',
+        target: 'http://192.168.1.25:8084/',
+        // target: 'http://pm2.winvers.com/zhdxhd',
+        ws: true,
+        secure: false,
+        changOrigin: true, // 是否允许跨越
+        pathRewrite: {
+          '^/apis': ''
         }
       }
     },
-    before: app => { }
+    // eslint-disable-next-line no-unused-vars
+    before: app => {}
   }
 }
 // module.exports = {

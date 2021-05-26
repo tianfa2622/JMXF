@@ -10,13 +10,23 @@
         <input type="password" class="input pass_input" required="" />
         <label class="lable pass_lable">请输入密码</label>
       </div>
-      <input type="submit" name="" value="登录" class="submit" />
+      <input type="submit" name="" value="登录" class="submit" @click="submit" />
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {}
+  },
+  mounted() {},
+  methods: {
+    submit() {
+      this.$router.push('/home')
+    }
+  }
+}
 </script>
 
 <style lang="scss">

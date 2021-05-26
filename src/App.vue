@@ -1,7 +1,12 @@
 <template>
   <div id="app">
-    <Header class="head" />
-    <router-view class="main" />
+    <template v-if="page">
+      <router-view />
+    </template>
+    <template v-else>
+      <Header class="head" />
+      <router-view class="main" />
+    </template>
   </div>
 </template>
 
@@ -13,7 +18,14 @@ export default {
     Header
   },
   data() {
-    return {}
+    return {
+      page: true
+    }
+  },
+  created() {
+    console.log(this)
+    this.$route.name === '登录' ? (this.page = true) : (this.page = false)
+    console.log('router', this.$route.name)
   }
 }
 </script>

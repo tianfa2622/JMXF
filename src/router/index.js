@@ -6,6 +6,12 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
+    redirect: {
+      path: '/login'
+    }
+  },
+  {
+    path: '/home',
     name: '首页',
     component: () => import('@/views/home/index')
   },
@@ -113,6 +119,11 @@ const routes = [
     path: '/EmergencyCommand',
     name: '应急指挥提示',
     component: () => import('@/views/emergency/EmergencyCommand')
+  },
+  {
+    path: '/system',
+    name: '系统管理',
+    component: () => import('@/views/system/index')
   }
 ]
 
