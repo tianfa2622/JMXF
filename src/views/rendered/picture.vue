@@ -3,13 +3,13 @@
     <div class="content-title">勤务一图展示</div>
     <div class="content-map">
       <div class="map-scope">
-        选择区域：<el-select v-model="value" placeholder="请选择">
+        选择区域：<el-select v-model="value" placeholder="请选择" @change="selectMap">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
         <el-button>搜索</el-button>
       </div>
-      <div class="map">
-        <pictureMap />
+      <div class="Map">
+        <pictureMap :area-title="areaTitle" />
       </div>
     </div>
 
@@ -51,6 +51,15 @@ export default {
   },
   data() {
     return {
+      value: '',
+      input: '',
+      currentPage4: 1,
+      areaTitle: '',
+      options: [
+        { label: '望城区', value: '望城区' },
+        { label: '岳麓区', value: '岳麓区' },
+        { label: '雨花区', value: '雨花区' }
+      ],
       tableData: {
         tableHeader: [
           {
@@ -114,6 +123,19 @@ export default {
         ]
       }
     }
+  },
+  methods: {
+    selectMap(v) {
+      this.areaTitle = v
+    },
+    // 切换当前页展示条数
+    handleSizeChange(val) {
+      console.log(val)
+    },
+    // 切换分页
+    handleCurrentChange(val) {
+      console.log(val)
+    }
   }
 }
 </script>
@@ -138,7 +160,7 @@ export default {
   }
   .content-map {
     width: 100%;
-    height: 52%;
+    height: 70%;
     .map-scope {
       width: 100%;
       height: 30px;
@@ -166,7 +188,7 @@ export default {
         padding: 8px 20px;
       }
     }
-    .map {
+    .Map {
       width: 100%;
       height: calc(100% - 30px);
       padding: 10px;
@@ -174,10 +196,11 @@ export default {
   }
   .content-tab {
     width: 100%;
-    height: 20%;
+    // height: 20%;
     .tab-title {
       color: #fff;
       font-size: 16px;
+      margin-top: 20px;
     }
     .table {
       width: 100%;
@@ -217,9 +240,10 @@ export default {
   }
   .content-query {
     width: 100%;
-    height: 10%;
+    // height: 10%;
     .query-title {
       color: #fff;
+      margin-top: 10px;
       font-size: 16px;
     }
     .query-inputs {

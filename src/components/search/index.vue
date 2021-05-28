@@ -21,6 +21,9 @@
       <el-button v-if="item.type === 'reset'" type="primary" @click="reset">{{ item.name }}</el-button>
       <el-button v-if="item.type === 'add'" type="primary" @click="add">{{ item.name }}</el-button>
       <el-button v-if="item.type === 'derived'" type="primary" @click="derived">{{ item.name }}</el-button>
+      <el-upload v-if="item.type === 'file'" ref="upload" action="" :on-change="handleChange" :on-remove="handleRemove" :show-file-list="item.isList" :on-exceed="handleExceed" :limit="item.limit" :accept="item.accept" :auto-upload="false">
+        <el-button type="primary">{{ item.name }}</el-button>
+      </el-upload>
     </div>
   </el-form>
 </template>
@@ -50,6 +53,22 @@ export default {
     },
     selectChanged(code, data) {
       this.$emit('selectChanged', code, data)
+    },
+    // 上传文件时处理方法
+    handleChange(file, fileList) {
+      this.$emit('handleChange', file, fileList)
+    },
+    // 移除文件的操作方法
+    handleRemove(file, fileList) {
+      this.$emit('handleRemove', file, fileList)
+    },
+    // 超出最大上传文件数量时的处理方法
+    handleExceed() {
+      // this.$emit('handleExceed')
+      this.$message({
+        type: 'warning',
+        message: '超出最大上传文件数量的限制！'
+      })
     },
     iSformData() {
       if (this.formData !== undefined) {

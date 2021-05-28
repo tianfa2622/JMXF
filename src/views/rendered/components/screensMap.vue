@@ -1,11 +1,11 @@
 <template>
   <div style="width:100%;height:100%;">
     <baidu-map class="map" :zoom="zoom" :scroll-wheel-zoom="true" :center="center"></baidu-map>
-      <!-- <bm-marker :position="markerPoint1" animation="BMAP_ANIMATION_BOUNCE" :icon="{ url: require('@/assets/awarenessMap/u1844.png'), size: { width: 50, height: 50 } }" @click="videoInfo"></bm-marker>
+    <!-- <bm-marker :position="markerPoint1" animation="BMAP_ANIMATION_BOUNCE" :icon="{ url: require('@/assets/awarenessMap/u1844.png'), size: { width: 50, height: 50 } }" @click="videoInfo"></bm-marker>
       <bm-marker :position="markerPoint2" animation="BMAP_ANIMATION_BOUNCE" :icon="{ url: require('@/assets/awarenessMap/u2460.png'), size: { width: 50, height: 50 } }" @click="carInfo"></bm-marker>
       <bm-marker :position="markerPoint3" animation="BMAP_ANIMATION_BOUNCE" :icon="{ url: require('@/assets/awarenessMap/u2476.png'), size: { width: 50, height: 50 } }" @click="stationInfo"></bm-marker>
       <bm-marker :position="markerPoint4" animation="BMAP_ANIMATION_BOUNCE" :icon="{ url: require('@/assets/awarenessMap/u2808.png'), size: { width: 50, height: 50 } }" @click="alarmInfo"></bm-marker> -->
-    </baidu-map>
+    <!-- </baidu-map> -->
     <!-- <el-dialog :title="title" center width="30%" :visible.sync="dialogFormVisible">
       <div v-if="title === '视频监控'" class="dialog_content">
         <div class="col_span"><span class="span_title">名称：</span><span class="span_content">万家丽中路南段S1摄像头</span></div>

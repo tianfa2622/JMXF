@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="BigScreenContent">
     <div class="content-title">大屏展示控制</div>
     <div class="content-footage">
       <div class="footage-title">实时视频画面</div>
@@ -118,13 +118,13 @@
       <div class="footage-title">电子地图</div>
       <div class="map-select">
         选择区域：
-        <el-select v-model="value" placeholder="请选择">
+        <el-select v-model="areaTitle" placeholder="请选择" @change="selectMap">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
         <el-button>搜索</el-button>
       </div>
       <div class="map">
-        <pictureMap />
+        <screensMap :area-title="areaTitle" />
       </div>
     </div>
     <el-dialog :title="title" :visible.sync="dialogShow" center width="50%">
@@ -202,11 +202,11 @@
 
 <script>
 import tablein from '@/components/Table/tablein'
-import pictureMap from './components/pictureMap'
+import screensMap from './components/screensMap'
 const cityOptions = ['万家丽地铁站-1号摄像头', '万家丽地铁站-1号摄像头', '万家丽地铁站-1号摄像头', '万家丽地铁站-1号摄像头', '万家丽地铁站-1号摄像头']
 export default {
   components: {
-    pictureMap,
+    screensMap,
     tablein
   },
   data() {
@@ -289,10 +289,19 @@ export default {
           width: 150,
           slotName: 'operation'
         }
+      ],
+      areaTitle: '',
+      options: [
+        { label: '望城区', value: '望城区' },
+        { label: '岳麓区', value: '岳麓区' },
+        { label: '雨花区', value: '雨花区' }
       ]
     }
   },
   methods: {
+    selectMap(v) {
+      this.areaTitle = v
+    },
     handleCheckAllChange(val) {
       this.checkedCities = val ? cityOptions : []
       this.isIndeterminate = false
@@ -343,7 +352,7 @@ export default {
 </script>
 
 <style lang="scss">
-.content {
+.BigScreenContent {
   width: 95%;
   height: calc(100% - 120px);
   margin: 0 auto;

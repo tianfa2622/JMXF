@@ -10,7 +10,9 @@ import ECharts from 'vue-echarts'
 import echarts from 'echarts'
 import BaiduMap from 'vue-baidu-map'
 import remConfig from './assets/style/remConfig'
+import XLSX from 'xlsx'
 
+Vue.prototype.XLSX = XLSX
 Vue.use(BaiduMap, {
   ak: 'GfCC3A23G6Z83VepGIYjZxa7u2muFo9I'
 })

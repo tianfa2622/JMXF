@@ -64,14 +64,14 @@
               <p class="titles">警力库</p>
               <p class="data">
                 <span style="color:#fff;">共2102人</span>
-                <span style="color:#fff;" @click="PoliceForce">查看详情>></span>
+                <span style="color:#fff;cursor: pointer;" @click="PoliceForce">查看详情>></span>
               </p>
             </li>
             <li>
               <p class="titles">临控库</p>
               <p class="data">
                 <span style="color:#fff;">共2102人</span>
-                <span style="color:#fff;" @click="TemporaryControl">查看详情>></span>
+                <span style="color:#fff; cursor: pointer;" @click="TemporaryControl">查看详情>></span>
               </p>
             </li>
           </ul>
@@ -80,14 +80,14 @@
               <p class="titles">战果库</p>
               <p class="data">
                 <span style="color:#fff;">共2102人</span>
-                <span style="color:#fff;" @click="Victory">查看详情>></span>
+                <span style="color:#fff;cursor: pointer;" @click="Victory">查看详情>></span>
               </p>
             </li>
             <li>
               <p class="titles">资源装备库</p>
               <p class="data">
                 <span style="color:#fff;">共2102人</span>
-                <span style="color:#fff;" @click="equipment">查看详情>></span>
+                <span style="color:#fff;cursor: pointer;" @click="equipment">查看详情>></span>
               </p>
             </li>
           </ul>
@@ -300,11 +300,12 @@ export default {
   }
   .content-map {
     width: 100%;
-    height: 42%;
+    height: 50%;
   }
   .content-show {
     width: 100%;
-    height: 25%;
+    // height: 25%;
+    margin-top: 20px;
     display: flex;
     .showbox {
       width: 50%;
@@ -370,6 +371,7 @@ export default {
             padding: 10px;
             .titles {
               color: #00f3ff;
+
               text-align: center;
             }
             .data {

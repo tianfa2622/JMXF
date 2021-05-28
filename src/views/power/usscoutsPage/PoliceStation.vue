@@ -1,7 +1,7 @@
 <template>
   <div class="Perception_content">
     <div class="scope">
-      <Elsearch :search-settings="searchSettings" :search-btn="searchBtn" :form-data="formData" @add="add" @search="search" />
+      <Elsearch :search-settings="searchSettings" :search-btn="searchBtn" :form-data="formData" @add="add" @search="search" @handleChange="handleChange" @handleRemove="handleRemove" />
     </div>
     <div class="table">
       <tablein :data="tableData">
@@ -70,7 +70,7 @@ export default {
         { name: '搜索', type: 'search' },
         { name: '重置', type: 'reset' },
         { name: '添加', type: 'add' },
-        { name: '导入', type: 'derived' }
+        { name: '导入', type: 'file' }
       ],
       tableData: {
         tableHeader: [
@@ -199,7 +199,36 @@ export default {
       this.dialogShow = true
       this.isBottomBtn = true
     },
-    derived() {},
+    // 导入
+    // 上传文件时处理方法
+    // eslint-disable-next-line no-unused-vars
+    handleChange(file, fileList) {
+      console.log(file, fileList)
+      const objFile = file.raw
+      const objStr = /\.(xlsx|xls|csv|vcf|txt)$/
+      if (!objStr.test(objFile.name)) {
+        this.$alert('选择的文件格式不对，请选对格式1', '警告', {
+          confirmButtonText: '确定'
+        })
+        return false
+      } else {
+        this.suffix = objFile.name.split('.')[1]
+      }
+      if (typeof FileReader === 'undefined') {
+        // 用来判断浏览器是否支持 FileReader
+        this.$message({
+          type: 'info',
+          message: '您的浏览器不支持文件读取。'
+        })
+      }
+      this.thisObj = objFile
+      console.log('选中的xlsx文件', this.thisObj.name)
+    },
+    // 移除文件的操作方法
+    // eslint-disable-next-line no-unused-vars
+    handleRemove(file, fileList) {
+      this.fileTemp = null
+    },
     // 删除
     del() {
       this.delShow = true

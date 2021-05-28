@@ -2,10 +2,12 @@
   <div class="Duty_content">
     <div class="row-content">
       <div class="col-search">
-        <Elsearch :search-settings="searchSettings" :search-btn="searchBtn" :form-data="formData" @add="add" @search="search" @reset="reset" />
+        <Elsearch ref="Elsearch" :search-settings="searchSettings" :search-btn="searchBtn" :form-data="formData" @add="add" @search="search" @reset="reset" />
         <div class="Elsearch_btn">
-          <el-button>导入</el-button>
-          <el-button>导出</el-button>
+          <el-upload ref="upload" action="" :on-change="handleChange" :on-remove="handleRemove" :show-file-list="false" :on-exceed="handleExceed" limit="1" accept="" :auto-upload="false">
+            <el-button type="primary">导入</el-button>
+            <el-button @click="exportToExcel">导出</el-button>
+          </el-upload>
         </div>
       </div>
       <div class="col-table">
@@ -127,7 +129,9 @@ export default {
           input: '123'
         })
       },
-      currentPage: 1
+      currentPage: 1,
+      fileData: [],
+      outputs: []
     }
   },
   methods: {
@@ -178,6 +182,90 @@ export default {
     // 弹出框取消按钮
     cancel() {
       this.dialogShow = false
+    },
+    // excel 数据导出
+    exportToExcel() {
+      const tHeader = ['序号', '巡区排班名称', '警员编号', '姓名', '公安机关名称', '巡逻区域名称', '开始时间', '结束时间']
+      const filterVal = ['input', 'input', 'input', 'input', 'input', 'input', 'input', 'input']
+      import('@/components/excel/Export2Excel').then(excel => {
+        const list = this.tableData.tableList
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: '排班',
+          autoWidth: true,
+          bookType: 'xlsx'
+        })
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]))
+    },
+    // 导入
+    // 上传文件时处理方法
+    // eslint-disable-next-line no-unused-vars
+    handleChange(file, fileList) {
+      console.log(file, fileList)
+      this.fileData = file // 保存当前选择文件
+      console.log(this.XLSX)
+      this.readExcel() // 调用读取数据的方法
+    },
+    // 读取数据
+    readExcel(e) {
+      console.log(e)
+      const that = this
+      const files = that.fileData
+      if (!files) {
+        // 如果没有文件
+        this.$message.info('请上传文件！')
+        return false
+      } else if (!/\.(xls|xlsx)$/.test(files.name.toLowerCase())) {
+        this.$message.error('上传格式不正确，请上传xls或者xlsx格式')
+        return false
+      }
+      const fileReader = new FileReader()
+      fileReader.onload = ev => {
+        try {
+          const data = ev.target.result
+          const workbook = this.XLSX.read(data, {
+            type: 'binary'
+          })
+          if (workbook.SheetNames.length >= 1) {
+            this.$message({
+              message: '导入数据表成功',
+              showClose: true,
+              type: 'success'
+            })
+          }
+          const wsname = workbook.SheetNames[0] // 取第一张表
+          const ws = this.XLSX.utils.sheet_to_json(workbook.Sheets[wsname]) // 生成json表格内容
+          that.outputs = [] // 清空接收数据
+          for (let i = 0; i < ws.length; i++) {
+            // 健名为绑定 el 表格的关键字，值则是ws[i][对应表头名]
+            // const sheetData = {
+            //   cid: ws[i]['序号'],
+            //   username: ws[i]['姓名'],
+            //   areanumber: ws[i]['行政区划代码'],
+            //   types: ws[i]['巡逻人员类别'],
+            //   number: ws[i]['编号'],
+            //   phone: ws[i]['联系电话'],
+            //   titleLevel: ws[i]['职称级别'],
+            //   sex: ws[i]['性别'],
+            //   experience: ws[i]['专业、经验能力'],
+            //   report: ws[i]['是否上报']
+            // }
+            // that.tableData.tableList.unshift(sheetData)
+          }
+          this.$refs.Elsearch.$refs.upload.value = ''
+          this.$refs.Elsearch.$refs.upload.clearFiles()
+          this.fileData = []
+        } catch (error) {
+          return false
+        }
+      }
+      // 如果为原生 input 则应是 files[0]
+      fileReader.readAsBinaryString(files.raw)
     }
   }
 }

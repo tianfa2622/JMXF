@@ -1,7 +1,7 @@
 <template>
   <div class="Patrolman_content">
     <div class="scope">
-      <Elsearch :search-settings="searchSettings" :search-btn="searchBtn" :form-data="formData" @add="add" @search="search" />
+      <Elsearch ref="Elsearch" :search-settings="searchSettings" :search-btn="searchBtn" :form-data="formData" @add="add" @search="search" @handleChange="handleChange" @handleRemove="handleRemove" />
     </div>
     <div class="table">
       <tablein :data="tableData">
@@ -138,7 +138,7 @@ export default {
         { name: '搜索', type: 'search' },
         { name: '重置', type: 'reset' },
         { name: '添加', type: 'add' },
-        { name: '导入', type: 'derived' }
+        { name: '导入', type: 'file', limit: 1 }
       ],
       tableData: {
         tableHeader: [
@@ -266,7 +266,9 @@ export default {
       // 规则
       rules: {
         name: []
-      }
+      },
+      fileData: [],
+      outputs: []
     }
   },
   methods: {
@@ -288,7 +290,75 @@ export default {
       this.isBottomBtn = true
     },
     // 导入
-    derived() {},
+    // 上传文件时处理方法
+    // eslint-disable-next-line no-unused-vars
+    handleChange(file, fileList) {
+      console.log(file, fileList)
+      this.fileData = file // 保存当前选择文件
+      console.log(this.XLSX)
+      this.readExcel() // 调用读取数据的方法
+    },
+    // 读取数据
+    readExcel(e) {
+      console.log(e)
+      const that = this
+      const files = that.fileData
+      if (!files) {
+        // 如果没有文件
+        this.$message.info('请上传文件！')
+        return false
+      } else if (!/\.(xls|xlsx)$/.test(files.name.toLowerCase())) {
+        this.$message.error('上传格式不正确，请上传xls或者xlsx格式')
+        return false
+      }
+      const fileReader = new FileReader()
+      fileReader.onload = ev => {
+        try {
+          const data = ev.target.result
+          const workbook = this.XLSX.read(data, {
+            type: 'binary'
+          })
+          if (workbook.SheetNames.length >= 1) {
+            this.$message({
+              message: '导入数据表成功',
+              showClose: true,
+              type: 'success'
+            })
+          }
+          const wsname = workbook.SheetNames[0] // 取第一张表
+          const ws = this.XLSX.utils.sheet_to_json(workbook.Sheets[wsname]) // 生成json表格内容
+          that.outputs = [] // 清空接收数据
+          for (let i = 0; i < ws.length; i++) {
+            // 健名为绑定 el 表格的关键字，值则是ws[i][对应表头名]
+            const sheetData = {
+              cid: ws[i]['序号'],
+              username: ws[i]['姓名'],
+              areanumber: ws[i]['行政区划代码'],
+              types: ws[i]['巡逻人员类别'],
+              number: ws[i]['编号'],
+              phone: ws[i]['联系电话'],
+              titleLevel: ws[i]['职称级别'],
+              sex: ws[i]['性别'],
+              experience: ws[i]['专业、经验能力'],
+              report: ws[i]['是否上报']
+            }
+            that.tableData.tableList.unshift(sheetData)
+          }
+          this.$refs.Elsearch.$refs.upload.value = ''
+          this.fileData = []
+        } catch (error) {
+          return false
+        }
+      }
+      // 如果为原生 input 则应是 files[0]
+      fileReader.readAsBinaryString(files.raw)
+    },
+    // 移除文件的操作方法
+    // eslint-disable-next-line no-unused-vars
+    handleRemove(file, fileList) {
+      this.fileData = null
+    },
+
     // 力量上报
     Ceiling() {
       this.deltitle = '力量上报'
@@ -298,6 +368,7 @@ export default {
     del() {
       this.deltitle = '删除'
       this.delShow = true
+      // console.log(this.$refs.Elsearch.$refs.inputer)
     },
     // 删除或上报确认按钮
     confirmDel() {
