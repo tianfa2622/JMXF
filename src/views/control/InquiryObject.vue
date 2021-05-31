@@ -318,10 +318,10 @@ export default {
       height: 50px;
       text-align: center;
       margin-top: 10px;
-      .el-pagination__total {
+      /deep/.el-pagination__total {
         color: #fff;
       }
-      .el-pagination__jump {
+      /deep/.el-pagination__jump {
         color: #fff;
       }
     }

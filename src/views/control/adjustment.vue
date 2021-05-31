@@ -149,19 +149,19 @@ export default {
   background-repeat: no-repeat;
   background-size: 100% 100%;
   overflow: auto;
-  /deep/.success-row {
+  .success-row {
     background-color: rgb(29, 114, 122) !important;
     color: #fff !important;
   }
-  /deep/.success-row:hover > td {
+  .success-row:hover > td {
     background-color: rgb(29, 114, 122) !important;
     color: #fff !important;
   }
-  /deep/.error-row {
+  .error-row {
     background-color: rgb(69, 244, 254) !important;
     color: #000 !important;
   }
-  /deep/.error-row:hover > td {
+  .error-row:hover > td {
     background-color: rgb(69, 244, 254) !important;
     color: #000 !important;
   }

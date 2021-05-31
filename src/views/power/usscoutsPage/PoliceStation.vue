@@ -251,6 +251,45 @@ export default {
 
 <style lang="scss" scoped>
 .Perception_content {
+  .scope {
+    width: 100%;
+    height: 50px;
+    // margin-bottom: 20px;
+  }
+  .table {
+    width: 100%;
+    /deep/ .el-table,
+    .el-table__expanded-cell {
+      background-color: transparent;
+    }
+    /deep/ .el-table tr {
+      background-color: transparent !important;
+    }
+    /deep/ .el-table__header-wrapper .el-table__header .has-gutter tr th {
+      background-color: transparent !important;
+      color: #fff;
+    }
+    // /deep/ .el-table--enable-row-transition .el-table__body td,
+    // .el-table .cell {
+    //   background-color: transparent;
+    //   color: #fff;
+    // }
+    .el-link {
+      margin-left: 10px;
+    }
+  }
+  .Pagin {
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    margin-top: 10px;
+    /deep/.el-pagination__total {
+      color: #fff;
+    }
+    /deep/.el-pagination__jump {
+      color: #fff;
+    }
+  }
   /deep/.el-dialog__wrapper {
     .el-dialog {
       .el-dialog__header {

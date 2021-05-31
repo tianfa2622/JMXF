@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="Patrol_force_content">
     <div class="content-title">巡逻力量管理</div>
     <div class="content-char">
       <div class="char">
@@ -49,8 +49,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.content {
+<style lang="scss" scoped>
+.Patrol_force_content {
   width: 95%;
   height: calc(100% - 120px);
   margin: 0 auto;
@@ -88,7 +88,7 @@ export default {
     width: 100%;
     height: 50%;
     padding-top: 10px;
-    /deep/ .el-tabs__item {
+    .el-tabs__item {
       color: #00f3ff;
     }
     .el-tabs {

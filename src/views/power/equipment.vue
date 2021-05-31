@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="Patrol_equipment_content">
     <div class="content-title">巡逻装备管理</div>
     <div class="content-char">
       <div class="char">
@@ -320,8 +320,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.content {
+<style lang="scss" scoped>
+.Patrol_equipment_content {
   width: 95%;
   height: calc(100% - 120px);
   margin: 0 auto;
@@ -405,7 +405,7 @@ export default {
       width: 100%;
       margin-bottom: 10px;
     }
-    .el-dialog__wrapper {
+    /deep/.el-dialog__wrapper {
       .el-dialog {
         .el-dialog__header {
           background-color: #0d2e36 !important;
@@ -462,13 +462,15 @@ export default {
       background-color: transparent !important;
     }
     /deep/ .el-table__header-wrapper .el-table__header .has-gutter tr th {
-      background-color: transparent !important;
+      // background-color: transparent !important;
+      background-color: #20505c !important;
       color: #fff;
     }
     /deep/ .el-table--enable-row-transition .el-table__body td,
     .el-table .cell {
       background-color: transparent;
-      color: #fff;
+      color: #45f4fe;
+      // color: #fff;
     }
     .el-link {
       margin-left: 20px;
@@ -478,10 +480,10 @@ export default {
       height: 50px;
       text-align: center;
       margin-top: 10px;
-      .el-pagination__total {
+      /deep/.el-pagination__total {
         color: #fff;
       }
-      .el-pagination__jump {
+      /deep/.el-pagination__jump {
         color: #fff;
       }
     }

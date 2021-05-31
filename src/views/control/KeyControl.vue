@@ -147,7 +147,28 @@ export default {
       Object.assign(this.$data.formData, this.$options.data().formData)
     },
     // 导出按钮
-    derived() {},
+    derived() {
+      this.exportToExcel()
+    },
+    // excel 数据导出
+    exportToExcel() {
+      const tHeader = ['序号', '对象名称', '布控类型', '布控时间', '布控状态', '是否上报']
+      const filterVal = ['input', 'input', 'input', 'input', 'input', 'input']
+      import('@/components/excel/Export2Excel').then(excel => {
+        const list = this.tableData.tableList
+        const data = this.formatJson(filterVal, list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: '重点布控管理列表',
+          autoWidth: true,
+          bookType: 'xlsx'
+        })
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]))
+    },
     // 切换当前页展示条数
     handleSizeChange(val) {
       console.log(val)
@@ -258,10 +279,10 @@ export default {
       height: 50px;
       text-align: center;
       margin-top: 10px;
-      .el-pagination__total {
+      /deep/.el-pagination__total {
         color: #fff;
       }
-      .el-pagination__jump {
+      /deep/.el-pagination__jump {
         color: #fff;
       }
     }

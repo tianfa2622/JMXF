@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="picture_content">
     <div class="content-title">勤务一图展示</div>
     <div class="content-map">
       <div class="map-scope">
@@ -140,8 +140,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.content {
+<style lang="scss" scoped>
+.picture_content {
   width: 95%;
   height: calc(100% - 120px);
   margin: 0 auto;
@@ -164,8 +164,9 @@ export default {
     .map-scope {
       width: 100%;
       height: 30px;
+      margin-bottom: 10px;
       color: #fff;
-      .el-select {
+      /deep/.el-select {
         height: 100%;
         .el-input__inner {
           height: 100%;
@@ -190,7 +191,7 @@ export default {
     }
     .Map {
       width: 100%;
-      height: calc(100% - 30px);
+      height: calc(100% - 60px);
       padding: 10px;
     }
   }
@@ -213,13 +214,15 @@ export default {
         background-color: transparent !important;
       }
       /deep/ .el-table__header-wrapper .el-table__header .has-gutter tr th {
-        background-color: transparent !important;
+        // background-color: transparent !important;
+        background-color: #20505c !important;
         color: #fff;
       }
       /deep/ .el-table--enable-row-transition .el-table__body td,
       .el-table .cell {
         background-color: transparent;
-        color: #fff;
+        color: #45f4fe;
+        // color: #fff;
       }
       .el-link {
         margin-left: 20px;
@@ -230,10 +233,10 @@ export default {
       height: 50px;
       text-align: center;
       margin-top: 10px;
-      .el-pagination__total {
+      /deep/.el-pagination__total {
         color: #fff;
       }
-      .el-pagination__jump {
+      /deep/.el-pagination__jump {
         color: #fff;
       }
     }
@@ -250,7 +253,7 @@ export default {
       padding-top: 10px;
       color: #fff;
       font-size: 14px;
-      .el-input {
+      /deep/.el-input {
         width: 170px;
         margin-right: 10px;
         input {

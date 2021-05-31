@@ -54,13 +54,13 @@
       <div class="footage-title">电子地图</div>
       <div class="map-select">
         选择区域：
-        <el-select v-model="value" placeholder="请选择">
+        <el-select v-model="areaTitle" placeholder="请选择" @change="selectMap">
           <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
         <el-button>搜索</el-button>
       </div>
       <div class="map">
-        <pictureMap />
+        <pictureMap :area-title="areaTitle" />
       </div>
     </div>
     <el-dialog :title="title" :visible.sync="dialogShow" center width="50%">
@@ -119,6 +119,19 @@
           </span>
         </template>
       </el-dialog>
+      <el-dialog title="抓拍图片" :visible.sync="ImagedialogShow" append-to-body center width="40%">
+        <el-image src="https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg">
+          <div slot="placeholder" class="image-slot">
+            加载中
+            <span class="dot">...</span>
+          </div>
+        </el-image>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="ImagedialogShow = false">关闭</el-button>
+          </span>
+        </template>
+      </el-dialog>
       <el-dialog title="删除" :visible.sync="delShow" center width="30%" append-to-body>
         <p>确认要删除选中内容吗？删除后数据不可恢复哦！！</p>
         <template #footer>
@@ -127,6 +140,12 @@
             <el-button @click="delShow = false">取消</el-button>
           </span>
         </template>
+      </el-dialog>
+      <el-dialog title="回放" :destroy-on-close="true" center append-to-body width="40%" :visible.sync="videoVisible" @close="videoVisible = false">
+        <Video :video-url="videoUrl"></Video>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="videoVisible = false">关闭</el-button>
+        </div>
       </el-dialog>
       <template #footer>
         <span class="dialog-footer">
@@ -140,25 +159,37 @@
 <script>
 import tablein from '@/components/Table/tablein'
 import pictureMap from './components/pictureMap'
+import Video from '@/components/video/index'
 const cityOptions = ['万家丽地铁站-1号摄像头', '万家丽地铁站-1号摄像头', '万家丽地铁站-1号摄像头', '万家丽地铁站-1号摄像头', '万家丽地铁站-1号摄像头']
 export default {
   components: {
     pictureMap,
-    tablein
+    tablein,
+    Video
   },
   data() {
     return {
+      areaTitle: '',
+      options: [
+        { label: '望城区', value: '望城区' },
+        { label: '岳麓区', value: '岳麓区' },
+        { label: '雨花区', value: '雨花区' }
+      ],
       title: '', // 弹出框标题
       delShow: false, // 删除或上报弹出层
       dialogShow: false, // 显示弹出框
       dialogData: {}, // 弹出框数据
       innerTitle: '',
       innerVisible: false,
+      videoVisible: false,
+      videoUrl: '',
+      currentPage4: 1,
       catchTitle: '抓录',
       checkAll: false,
       checkedCities: ['上海', '北京'],
       cities: cityOptions,
       isIndeterminate: true,
+      ImagedialogShow: false,
       form: {
         name: null
       },
@@ -292,7 +323,18 @@ export default {
       ]
     }
   },
+  watch: {
+    videoVisible(newValue, oldValue) {
+      console.log('1', oldValue)
+      if (newValue === false) {
+        this.videoUrl = ''
+      }
+    }
+  },
   methods: {
+    selectMap(v) {
+      this.areaTitle = v
+    },
     // 巡逻预案按钮
     patrolPlan() {
       this.title = '巡逻预案'
@@ -314,7 +356,9 @@ export default {
       this.tableDatatwo.tableHeader = this.tableHeader3
     },
     // 弹出层抓拍图片查看按钮
-    viewImage() {},
+    viewImage() {
+      this.ImagedialogShow = true
+    },
     // 抓录视频按钮
     catchVideo() {
       if (this.catchTitle === '抓录') {
@@ -330,7 +374,15 @@ export default {
       this.tableDatatwo.tableHeader = this.tableHeader4
     },
     // 弹出层抓录视频回放按钮
-    CaptureVideoReplay() {},
+    CaptureVideoReplay() {
+      this.videoUrl = 'https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm'
+      this.videoVisible = true
+    },
+    // 历史视频录像弹出层回放按钮
+    Replay() {
+      this.videoUrl = 'https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm'
+      this.videoVisible = true
+    },
     handleCheckAllChange(val) {
       this.checkedCities = val ? cityOptions : []
       this.isIndeterminate = false
@@ -339,6 +391,48 @@ export default {
       const checkedCount = value.length
       this.checkAll = checkedCount === this.cities.length
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length
+    },
+    // 弹出框确认按钮
+    confirm() {
+      this.dialogShow = false
+    },
+    // 弹出框关闭按钮
+    cancel() {
+      this.dialogShow = false
+    },
+    // 内部弹出层确定按钮
+    innerConfirm() {
+      this.innerVisible = false
+    },
+    // 内部弹出层关闭按钮
+    innerCancel() {
+      this.innerVisible = false
+    },
+    // 弹出层里删除按钮
+    confirmDel() {
+      this.delShow = false
+    },
+    // 切换当前页展示条数
+    handleSizeChange(val) {
+      console.log(val)
+    },
+    // 切换分页
+    handleCurrentChange(val) {
+      console.log(val)
+    },
+    // 巡逻预案table列表修改按钮
+    modify() {
+      this.innerTitle = '修改'
+      this.innerVisible = true
+    },
+    // 巡逻预案添加按钮
+    add() {
+      this.innerTitle = '修改'
+      this.innerVisible = true
+    },
+    // 巡逻预案table列表删除按钮
+    del() {
+      this.delShow = true
     }
   }
 }

@@ -197,17 +197,25 @@
         </span>
       </template>
     </el-dialog>
+    <el-dialog title="回放" :destroy-on-close="true" center width="40%" :visible.sync="videoVisible" @close="videoVisible = false">
+      <Video :video-url="videoUrl"></Video>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="videoVisible = false">关闭</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import tablein from '@/components/Table/tablein'
 import screensMap from './components/screensMap'
+import Video from '@/components/video/index'
 const cityOptions = ['万家丽地铁站-1号摄像头', '万家丽地铁站-1号摄像头', '万家丽地铁站-1号摄像头', '万家丽地铁站-1号摄像头', '万家丽地铁站-1号摄像头']
 export default {
   components: {
     screensMap,
-    tablein
+    tablein,
+    Video
   },
   data() {
     return {
@@ -216,6 +224,8 @@ export default {
       dialogShow: false, // 显示弹出框
       dialogData: {}, // 弹出框数据
       innerTitle: '',
+      videoVisible: false,
+      videoUrl: '',
       innerVisible: false,
       checkAll: false,
       checkedCities: ['上海', '北京'],
@@ -298,9 +308,21 @@ export default {
       ]
     }
   },
+  watch: {
+    videoVisible(newValue, oldValue) {
+      console.log('1', oldValue)
+      if (newValue === false) {
+        this.videoUrl = ''
+      }
+    }
+  },
   methods: {
     selectMap(v) {
       this.areaTitle = v
+    },
+    Replay() {
+      this.videoUrl = 'https://cdn.theguardian.tv/webM/2015/07/20/150716YesMen_synd_768k_vp8.webm'
+      this.videoVisible = true
     },
     handleCheckAllChange(val) {
       this.checkedCities = val ? cityOptions : []
