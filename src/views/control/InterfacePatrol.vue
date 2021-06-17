@@ -2,12 +2,12 @@
   <div class="cx_content">
     <div class="content-title">界面巡逻查控</div>
     <!-- echarts图表 -->
-    <el-row type="flex" justify="space-around">
-      <el-col :span="12">
+    <el-row type="flex" class="row_box" justify="space-around">
+      <el-col :span="10">
         <div class="row_title">人车感知数量统计</div>
-        <div class="row_echarts"><Bar></Bar></div>
+        <div class="row_echarts"><Line2></Line2></div>
       </el-col>
-      <el-col :span="12">
+      <el-col :span="10">
         <div class="row_title">盘查信息反馈统计</div>
         <div class="row_echarts"><Myline></Myline></div>
       </el-col>
@@ -86,13 +86,13 @@
 </template>
 
 <script>
-import Bar from './components/InquiryObject/bar'
-import Myline from './components/InquiryObject/line.vue'
+import Line2 from './components/interfacePatrol/line2'
+import Myline from './components/interfacePatrol/line.vue'
 import Elsearch from '@/components/search/index'
 import Tablein from '@/components/Table/tablein.vue'
 export default {
   components: {
-    Bar,
+    Line2,
     Myline,
     Tablein,
     Elsearch
@@ -303,6 +303,9 @@ export default {
     font-size: 22px;
     color: #fff;
     font-weight: 700;
+  }
+  .row_box {
+    height: 50%;
   }
   .row_title {
     color: #ffffff;

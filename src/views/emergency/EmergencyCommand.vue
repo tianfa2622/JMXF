@@ -1,12 +1,12 @@
 <template>
   <div class="cx_content">
     <div class="content-title">应急指挥提示</div>
-    <el-row type="flex" justify="space-around">
-      <el-col :span="11">
+    <el-row type="flex" class="row_box" justify="space-around">
+      <el-col :span="10">
         <div class="row_title">预测警情登记统计</div>
-        <div class="row_echarts"><Bar></Bar></div>
+        <div class="row_echarts"><Pie></Pie></div>
       </el-col>
-      <el-col :span="11">
+      <el-col :span="10">
         <div class="row_title">每月预测警情风险数量统计</div>
         <div class="row_echarts"><Myline></Myline></div>
       </el-col>
@@ -29,14 +29,14 @@
 </template>
 
 <script>
-import Bar from './components/InquiryObject/bar'
-import Myline from './components/InquiryObject/line.vue'
+import Pie from './components/EmergencyCommand/pie'
+import Myline from './components/EmergencyCommand/line'
 import Tablein from '@/components/Table/tablein.vue'
 export default {
   components: {
-    Bar,
     Myline,
-    Tablein
+    Tablein,
+    Pie
   },
   data() {
     return {
@@ -147,6 +147,9 @@ export default {
     font-size: 22px;
     color: #fff;
     font-weight: 600;
+  }
+  .row_box {
+    height: 50%;
   }
   .row_title {
     color: #ffffff;

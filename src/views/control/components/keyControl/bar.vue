@@ -21,7 +21,7 @@ export default {
           containLabel: true
         },
         xAxis: {
-          data: ['人员', '机动车', '非机动车', '物品', '船舶', '照片', '视频'],
+          data: ['人脸布控', '车辆布控', 'MAC布控', 'RFID布控', '身份证布控'],
           axisLine: {
             lineStyle: {
               color: '#fff',
@@ -42,7 +42,7 @@ export default {
             name: '贺龙体育馆第一区域',
             type: 'bar',
             barWidth: '50%',
-            data: [220, 182, 191, 234, 290, 330, 310]
+            data: [220, 182, 191, 234, 290]
           }
         ]
       })

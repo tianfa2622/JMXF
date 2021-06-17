@@ -57,10 +57,10 @@ export default {
               }
             },
             axisTick: {
-              show: true
+              show: false
             },
             // boundaryGap: true,
-            data: ['2020', '2021', '2022', '2023', '2024']
+            data: ['2019-01', '2019-02', '2019-03', '2019-04', '2019-05', '2019-06']
           }
         ],
         yAxis: [
@@ -82,7 +82,7 @@ export default {
               }
             },
             axisTick: {
-              show: false
+              show: true
             },
             splitLine: {
               lineStyle: {

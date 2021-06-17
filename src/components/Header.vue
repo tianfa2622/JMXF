@@ -4,7 +4,7 @@
     <div class="head-mid">
       <ul>
         <li>
-          <router-link to="/home"><div>首页</div></router-link>
+          <router-link to="/"><div>首页</div></router-link>
         </li>
         <li>
           <div>

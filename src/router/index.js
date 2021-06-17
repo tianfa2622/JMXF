@@ -4,14 +4,14 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
+  // {
+  //   path: '/',
+  //   redirect: {
+  //     path: '/login'
+  //   }
+  // },
   {
     path: '/',
-    redirect: {
-      path: '/login'
-    }
-  },
-  {
-    path: '/home',
     name: '首页',
     component: () => import('@/views/home/index')
   },

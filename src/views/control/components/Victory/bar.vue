@@ -21,7 +21,7 @@ export default {
           containLabel: true
         },
         xAxis: {
-          data: ['人员', '机动车', '非机动车', '物品', '船舶', '照片', '视频'],
+          data: ['天心区', '芙蓉区', '岳麓区', '雨花区', '望城区', '开福区', '长沙县'],
           axisLine: {
             lineStyle: {
               color: '#fff',

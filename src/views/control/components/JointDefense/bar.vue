@@ -20,8 +20,15 @@ export default {
           bottom: '5%',
           containLabel: true
         },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            // 坐标轴指示器，坐标轴触发有效
+            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+          }
+        },
         xAxis: {
-          data: ['人员', '机动车', '非机动车', '物品', '船舶', '照片', '视频'],
+          data: ['天心区', '芙蓉区', '岳麓区', '雨花区', '望城区', '开福区', '长沙县'],
           axisLine: {
             lineStyle: {
               color: '#fff',
@@ -42,7 +49,7 @@ export default {
             name: '贺龙体育馆第一区域',
             type: 'bar',
             barWidth: '50%',
-            data: [220, 182, 191, 234, 290, 330, 310]
+            data: [180, 400, 150, 500, 800, 888, 240]
           }
         ]
       })

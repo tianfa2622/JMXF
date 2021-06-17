@@ -1,12 +1,12 @@
 <template>
   <div class="cx_content">
     <div class="content-title">重点布控管理</div>
-    <el-row type="flex" justify="space-around">
-      <el-col :span="12">
+    <el-row type="flex" class="row_box" justify="space-around">
+      <el-col :span="10">
         <div class="row_title">布控方式分类统计</div>
         <div class="row_echarts"><Bar></Bar></div>
       </el-col>
-      <el-col :span="12">
+      <el-col :span="10">
         <div class="row_title">每月重点布控统计</div>
         <div class="row_echarts"><Myline></Myline></div>
       </el-col>
@@ -52,8 +52,8 @@
 </template>
 
 <script>
-import Bar from './components/InquiryObject/bar'
-import Myline from './components/InquiryObject/line.vue'
+import Bar from './components/keyControl/bar'
+import Myline from './components/keyControl/line'
 import Elsearch from '@/components/search/index'
 import Tablein from '@/components/Table/tablein.vue'
 export default {
@@ -238,6 +238,9 @@ export default {
     color: #fff;
     font-weight: 600;
   }
+  .row_box {
+    height: 50%;
+  }
   .row_title {
     color: #ffffff;
     font-size: 14px;
@@ -249,7 +252,7 @@ export default {
     height: calc(100% - 30px);
   }
   .cx_content_search {
-    margin: 10px 0 20px 0;
+    margin: 20px 0 20px 0;
   }
   .cx_content_table {
     width: 100%;

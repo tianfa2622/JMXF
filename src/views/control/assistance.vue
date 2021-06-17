@@ -1,14 +1,14 @@
 <template>
   <div class="cx_content">
     <div class="content-title">跨域协助查控</div>
-    <el-row type="flex" justify="space-around">
-      <el-col :span="12">
+    <el-row type="flex" class="row_box" justify="space-around">
+      <el-col :span="10">
         <div class="row_title">跨域查控数量统计</div>
-        <div class="row_echarts"><Bar></Bar></div>
-      </el-col>
-      <el-col :span="12">
-        <div class="row_title">查控反馈比例统计</div>
         <div class="row_echarts"><Myline></Myline></div>
+      </el-col>
+      <el-col :span="10">
+        <div class="row_title">查控反馈比例统计</div>
+        <div class="row_echarts"><Bar></Bar></div>
       </el-col>
     </el-row>
     <div class="cx_content_search">
@@ -56,8 +56,8 @@
 </template>
 
 <script>
-import Bar from './components/InquiryObject/bar'
-import Myline from './components/InquiryObject/line.vue'
+import Bar from './components/assistance/bar'
+import Myline from './components/assistance/line'
 import Elsearch from '@/components/search/index'
 import Tablein from '@/components/Table/tablein.vue'
 export default {
@@ -227,6 +227,9 @@ export default {
     color: #fff;
     font-weight: 600;
   }
+  .row_box {
+    height: 50%;
+  }
   .row_title {
     color: #ffffff;
     font-size: 14px;
@@ -238,7 +241,7 @@ export default {
     height: calc(100% - 30px);
   }
   .cx_content_search {
-    margin: 10px 0 20px 0;
+    margin: 20px 0 20px 0;
   }
   .cx_content_table {
     width: 100%;

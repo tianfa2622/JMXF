@@ -57,7 +57,7 @@ export default {
               }
             },
             axisTick: {
-              show: true
+              show: false
             },
             // boundaryGap: true,
             data: ['2020', '2021', '2022', '2023', '2024']
@@ -82,7 +82,7 @@ export default {
               }
             },
             axisTick: {
-              show: false
+              show: true
             },
             splitLine: {
               lineStyle: {
